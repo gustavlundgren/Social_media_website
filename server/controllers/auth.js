@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { default: User } = require("../models/User");
+const User = require("../models/User");
 
 const register = async (req, res) => {
   const {
@@ -9,7 +9,6 @@ const register = async (req, res) => {
     email,
     password,
     picturePath,
-    friends,
     location,
     school,
   } = req.body;
@@ -24,15 +23,15 @@ const register = async (req, res) => {
       email,
       password: passwordHash,
       picturePath,
-      friends,
+      friends: [],
       location,
       school,
       interactions: 0,
       views: 0,
     });
 
-    const savedUser = newUser.save();
-    res.status(201).json(savedUser);
+    newUser.save();
+    res.status(201).json(newUser);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -42,17 +41,23 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = User.findOne({ email: email });
-    if (!user)
-      return res.status(400).json({ message: "User found with that email." });
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "No User found with that email." });
+    }
 
-    const match = bcrypt.compare(password, user.password);
-    if (!match) return res.status(403).json({ message: "Invalid credetials" });
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.status(403).json({ message: "Invalid credetials" });
+    }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    delete user.password;
+    user.password = undefined;
 
-    res.status(201).json({ token, user });
+    res.status(200).json({ token, user });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

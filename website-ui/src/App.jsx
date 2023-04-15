@@ -1,11 +1,18 @@
 import { useState } from "react";
-import Register from "./pages/register/register.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Register from "./pages/register";
+import Login from "./pages/login";
+import Landing from "./pages/landing";
 
 function App() {
   return (
-    <div className='bg-white h-full'>
-      <Register></Register>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Landing />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

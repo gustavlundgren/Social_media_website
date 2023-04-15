@@ -1,6 +1,10 @@
 const express = require("express");
 const verifyToken = require("../middleware/auth");
-const { getFeedPosts } = require("../controllers/posts");
+const {
+  getFeedPosts,
+  getUserPosts,
+  likePost,
+} = require("../controllers/posts");
 const router = express.Router();
 
 /* Read */

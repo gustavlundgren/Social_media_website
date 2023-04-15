@@ -1,88 +1,88 @@
 import { useState, useEffect } from "react";
 import axios from "../../api/index";
-import { FiUser } from "react-icons/fi";
-import { AiOutlineLock } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [usr, setUsr] = useState("");
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
 
   const [errMsg, setErrMsg] = useState("Error");
   const [err, setErr] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const usrRegex = /^.{4, 20}$/;
-  const pwdRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/;
+  const inputStyle =
+    "bg-[#d8d8d8] text-[#707070] py-4 px-2 rounded-xl focus:outline-none";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(pwdRegex.test(pwd));
-
     // Api call
     try {
-      const response = await axios.post(
-        "/login",
-        JSON.stringify({ usr, pwd }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await axios.post("/auth/login", {
+        email: email,
+        password: pwd,
+      });
 
-      console.log(response.data);
+      // Auth
+      localStorage.setItem("token", response.data?.token);
+
+      navigate("/home");
     } catch (err) {
       console.log(err);
+      if (false) {
+      }
     }
 
-    // Auth
-
-    setUsr("");
+    setEmail("");
     setPwd("");
   };
 
   return (
-    <main className='flex justify-center items-center w-screen h-screen bg-slate-300'>
+    <main className="font-quicksand flex justify-center items-center h-screen bg-[#dfdfdf]">
       <form
-        className='flex flex-col w-[22rem] h-[25rem] border-2 rounded-lg gap-6 px-4 py-2 bg-white'
+        className="flex flex-col w-9/12 gap-6 py-12 px-6 bg-white rounded-md"
         onSubmit={handleSubmit}
       >
-        <h1 className='font-bold text-4xl'>Login</h1>
-        <label htmlFor='email'>
-          Email
-          <FiUser></FiUser>
-        </label>
+        <h1 className="font-bold text-4xl">Login</h1>
+
         <input
-          type='text'
-          name='email'
-          placeholder='Type your email'
-          className='border-b-[0.15rem] border-black'
+          type="text"
+          name="email"
+          placeholder="Type your email"
+          className={inputStyle}
           onChange={(e) => {
-            setUsr(e.target.value);
+            setEmail(e.target.value);
           }}
+          value={email}
         />
-        <label htmlFor='password'>
-          Password
-          <AiOutlineLock></AiOutlineLock>
-        </label>
         <input
-          type='password'
-          name='password'
-          placeholder='Type your password'
-          className='border-b-[0.15rem] border-black'
+          type="password"
+          name="password"
+          placeholder="Type your password"
+          className={inputStyle}
           onChange={(e) => setPwd(e.target.value)}
+          value={pwd}
         />
 
         {err && (
-          <div className='bg-red-500 h-fit w-fit py-3 px-6 flex justify-center items-center rounded-lg border-2 border-red-950'>
-            <p className='text-red-950 text-xl font-bold'>{errMsg}</p>
+          <div className="bg-red-500 h-fit w-fit py-3 px-6 flex justify-center items-center rounded-lg border-2 border-red-950">
+            <p className="text-red-950 text-xl font-bold">{errMsg}</p>
           </div>
         )}
         <button
-          type='submit'
-          className='h-16 border-2 border-black rounded-sm mb-2 hover:bg-black hover:text-white mt-2 font-bold'
+          type="submit"
+          className="font-bold text-lg px-4 py-2 rounded-lg bg-[#5BBEFF] hover:scale-[101%]"
         >
           Sign in
         </button>
+        <div>
+          <p className="font-bold">Need an account?</p>
+          <a className="text-blue-700" href="/register">
+            Sign up
+          </a>
+        </div>
       </form>
     </main>
   );
