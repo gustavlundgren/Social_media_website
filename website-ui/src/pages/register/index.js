@@ -1,3 +1,3 @@
-import Register from "./register.jsx";
+import Register from "./Register.jsx";
 
 export default Register;

@@ -1,3 +1,3 @@
-import Landing from "./landing.jsx";
+import Landing from "./Landing.jsx";
 
 export default Landing;

@@ -4,6 +4,7 @@ const {
   getUserFriend,
   addFriend,
   removeFriend,
+  getUserById,
 } = require("../controllers/users");
 const router = express.Router();
 
@@ -11,6 +12,7 @@ const router = express.Router();
 
 /* Read */
 router.get("/:id/friends", verifyToken, getUserFriend);
+router.get("/:id", verifyToken, getUserById); 
 
 /* Update */
 router.put("/:id/add-friend", verifyToken, addFriend);

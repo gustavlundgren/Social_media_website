@@ -8,3 +8,7 @@
   background-color: #dfdfdf;
   overflow-x: hidden;
 }
+
+* ::-webkit-scrollbar {
+  display: none;
+}

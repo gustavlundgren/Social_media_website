@@ -6,7 +6,7 @@ const verifyToken = async (req, res, next) => {
 
     if (!token) return res.status(403).json({ message: "Acces denied" });
 
-    if (token.startsWidth("Bearer ")) {
+    if (token.startsWith("Bearer ")) {
       token = token.slice(7, token.length).trimLeft();
     }
 

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "../../api/index";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToken, addUser } from "../../redux/features/authSlice";
 
 function Login() {
   const navigate = useNavigate();
@@ -8,9 +10,11 @@ function Login() {
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
 
-  const [errMsg, setErrMsg] = useState("Error");
+  const [errMsg, setErrMsg] = useState("");
   const [err, setErr] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+
+  /* Redux state */
+  const dispatch = useDispatch();
 
   const inputStyle =
     "bg-[#d8d8d8] text-[#707070] py-4 px-2 rounded-xl focus:outline-none";
@@ -26,31 +30,50 @@ function Login() {
       });
 
       // Auth
-      localStorage.setItem("token", response.data?.token);
+      dispatch(addToken(response.data?.token));
+      dispatch(addUser(response.data?.user));
 
-      navigate("/home");
+      setEmail("");
+      setPwd("");
+      navigate("/");
     } catch (err) {
       console.log(err);
-      if (false) {
+
+      switch (err.response?.status) {
+        case 400:
+          setErrMsg("User with that email does not exist");
+
+          break;
+
+        case 403:
+          setErrMsg("Invalid credentials");
+
+          break;
+
+        case 500:
+          setErrMsg("Server connection failed");
+          break;
       }
     }
-
-    setEmail("");
-    setPwd("");
   };
 
+  useEffect(() => {
+    setErr(true);
+    setErrMsg("");
+  }, [email, pwd]);
+
   return (
-    <main className="font-quicksand flex justify-center items-center h-screen bg-[#dfdfdf]">
+    <main className='font-quicksand flex justify-center items-center h-screen bg-[#dfdfdf]'>
       <form
-        className="flex flex-col w-9/12 gap-6 py-12 px-6 bg-white rounded-md"
+        className='flex flex-col w-9/12 gap-6 py-12 px-6 bg-white rounded-md'
         onSubmit={handleSubmit}
       >
-        <h1 className="font-bold text-4xl">Login</h1>
+        <h1 className='font-bold text-4xl'>Login</h1>
 
         <input
-          type="text"
-          name="email"
-          placeholder="Type your email"
+          type='text'
+          name='email'
+          placeholder='Type your email'
           className={inputStyle}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -58,28 +81,24 @@ function Login() {
           value={email}
         />
         <input
-          type="password"
-          name="password"
-          placeholder="Type your password"
+          type='password'
+          name='password'
+          placeholder='Type your password'
           className={inputStyle}
           onChange={(e) => setPwd(e.target.value)}
           value={pwd}
         />
 
-        {err && (
-          <div className="bg-red-500 h-fit w-fit py-3 px-6 flex justify-center items-center rounded-lg border-2 border-red-950">
-            <p className="text-red-950 text-xl font-bold">{errMsg}</p>
-          </div>
-        )}
+        {err && <p className='text-red-600 text-lg font-semibold'>{errMsg}</p>}
         <button
-          type="submit"
-          className="font-bold text-lg px-4 py-2 rounded-lg bg-[#5BBEFF] hover:scale-[101%]"
+          type='submit'
+          className='font-bold text-lg px-4 py-2 rounded-lg bg-[#5BBEFF] hover:scale-[101%]'
         >
           Sign in
         </button>
         <div>
-          <p className="font-bold">Need an account?</p>
-          <a className="text-blue-700" href="/register">
+          <p className='font-bold'>Need an account?</p>
+          <a className='text-blue-700' href='/register'>
             Sign up
           </a>
         </div>

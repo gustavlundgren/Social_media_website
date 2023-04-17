@@ -42,7 +42,7 @@ const upload = multer({ storage: storage });
 /* Routes Width Files */
 
 app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/post", verifyToken, upload.single("picture"), createPost);
 
 /* Routes */
 app.use("/auth", authRoutes);
