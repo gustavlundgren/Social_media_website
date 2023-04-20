@@ -51,6 +51,8 @@ function Landing() {
       );
 
       console.log(response.data);
+      setPosts(response.data);
+      setDesc("");
     } catch (err) {
       console.log(err);
     }
@@ -151,7 +153,9 @@ function Landing() {
           </div>
 
           <div className='absolute top-[25rem] left-1/2 -translate-x-1/2 flex flex-col gap-3'>
-            {posts[0] ? <Post post={posts[0]} /> : <p>No post</p>}
+            {posts.map((post) => {
+              return <Post key={post._id} post={post} />;
+            })}
           </div>
         </div>
 

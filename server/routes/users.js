@@ -21,3 +21,4 @@ router.put("/:id/remove-friend", verifyToken, removeFriend);
 /* Delete */
 
 module.exports = router;
+ 

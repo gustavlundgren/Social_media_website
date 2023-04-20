@@ -50,8 +50,9 @@ function Login() {
 
           break;
 
-        case 500:
+        default:
           setErrMsg("Server connection failed");
+
           break;
       }
     }

@@ -50,7 +50,7 @@ function Post({ post }) {
           <hr />
 
           <img
-            src='public/images/nature-post.jpg'
+            src='public/images/linkan.jpg' // nature-post.jpg'
             alt='post pic'
             className='rounded-sm'
           />

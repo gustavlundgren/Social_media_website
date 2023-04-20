@@ -32,3 +32,4 @@ const removeFriend = async (req, res) => {};
 /* Delete */
 
 module.exports = { getUserFriend, addFriend, removeFriend, getUserById };
+ 
