@@ -17,8 +17,11 @@ export const authSlice = createSlice({
       state.token = "";
       state.user = "";
     },
+    addFriend: (state, action) => {
+      state.user.friends = action.payload;
+    },
   },
 });
 
-export const { addToken, addUser, logOut } = authSlice.actions;
+export const { addToken, addUser, logOut, addFriend } = authSlice.actions;
 export default authSlice.reducer;

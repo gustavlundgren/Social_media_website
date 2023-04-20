@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Post from "../../components/Post";
+import Friend from "../../components/Friend";
 import { BsMicFill, BsFillImageFill } from "react-icons/bs";
 import { AiOutlineEye } from "react-icons/ai";
 import { MdOutlineSchool } from "react-icons/md";
@@ -16,6 +17,7 @@ function Landing() {
   const [posts, setPosts] = useState([]);
   const [addPicture, setAddPicture] = useState(false);
   const [file, setFile] = useState(null);
+  const [friends, setFriends] = useState([]);
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -66,8 +68,29 @@ function Landing() {
     }
   };
 
+  const getFriends = async () => {
+    try {
+      const response = await axios.get(
+        `/users/${encodeURIComponent(user._id)}/friends`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+
+      console.log(response);
+      setFriends(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     getFeed();
+    getFriends();
+
+    console.log(friends);
   }, []);
 
   return (
@@ -83,7 +106,7 @@ function Landing() {
         </div>
       </section>
       <section className="flex flex-row justify-between w-screen h-[50rem] px-5 pt-5">
-        <div className="fixed top-[4rem] mt-10 flex flex-col w-[20rem] h-[25rem] gap-2 py-6 px-6 bg-white rounded-md">
+        <div className="fixed top-[4rem] mt-10 flex flex-col w-[20rem] h-[20rem] gap-2 py-6 px-6 bg-white rounded-md">
           <h1 className="font-bold text-2xl">Profil</h1>
 
           <div className="flex flex-row gap-2">
@@ -95,7 +118,7 @@ function Landing() {
             <div>
               <h4 className="font-bold h-4">{`${user.firstName} ${user.lastName}`}</h4>
               <p className="font-thin text-sm text-gray-500">
-                {user.friends.length} följare
+                {user.friends.length} vänner
               </p>
             </div>
           </div>
@@ -115,13 +138,7 @@ function Landing() {
             <hr />
 
             <h4 className="font-bold h-4">Bio</h4>
-            <button
-              onClick={() => {
-                console.log(user.friends);
-              }}
-            >
-              Log
-            </button>
+            <button onClick={() => console.log(user.friends)}>log</button>
           </div>
         </div>
 
@@ -173,12 +190,21 @@ function Landing() {
         </div>
 
         <div className="fixed top-[4rem] right-0 mt-10 flex mr-6 flex-col gap-8">
-          <div className="flex flex-col w-[20rem] h-[25rem] gap-6 py-6 px-6 bg-white rounded-md">
+          <div className="flex flex-col w-[20rem] h-[20rem] gap-4 py-6 px-6 bg-white rounded-md">
             <h1 className="font-bold text-2xl">Reklam</h1>
+            <img
+              src="http://localhost:3000/assets/cola_ad.jpg"
+              alt="ad"
+              className="rounded-sm border-2"
+            />
+            <h4 className="font-bold">Coca Cola</h4>
           </div>
 
           <div className="flex flex-col w-[20rem] h-fit gap-6 py-6 px-6 bg-white rounded-md">
             <h1 className="font-bold text-2xl">Vänner</h1>
+            {friends.map((friend) => {
+              return <Friend key={friend._id} friend={friend} />;
+            })}
           </div>
         </div>
       </section>

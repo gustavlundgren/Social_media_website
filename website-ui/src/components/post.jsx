@@ -1,15 +1,20 @@
 import axios from "../api/index";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsHandThumbsUp, BsHandThumbsUpFill } from "react-icons/bs";
 import { FaRegComment } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { FiUserPlus, FiUserMinus } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
+import { addFriend } from "../redux/features/authSlice";
 
 function Post({ post }) {
-  const [like, setLike] = useState(false);
-  const [count, setCount] = useState(0);
-
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
+
+  const dispatch = useDispatch();
+
+  const [like, setLike] = useState(false);
+  const [count, setCount] = useState(0);
+  const [isFriend, setIsFriend] = useState(user.friends.includes(post.userId));
 
   const handleAddFriend = async () => {
     try {
@@ -23,10 +28,6 @@ function Post({ post }) {
       const id = encodeURIComponent(user._id);
       friendId = encodeURIComponent(friendId);
 
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-
       const response = await axios.put(
         `/users/${id}/${friendId}`,
         {},
@@ -37,22 +38,11 @@ function Post({ post }) {
         }
       );
 
-      console.log(response);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+      console.log(response.data);
+      dispatch(addFriend(response.data.map((friend) => friend._id)));
 
-  const getFeed = async () => {
-    try {
-      const response = await axios.get("/posts", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-
-      console.log(response);
-      setPosts(response.data.reverse());
+      console.log(user.friends.includes(user.postId));
+      setIsFriend(user.friends.includes(post.userId));
     } catch (err) {
       console.log(err);
     }
@@ -60,17 +50,24 @@ function Post({ post }) {
 
   return (
     <div className="flex flex-col w-[40rem] h-full gap-6 py-6 px-6 bg-white rounded-md">
-      <div className="flex flex-row gap-2">
-        <img
-          src={`http://localhost:3000/assets/${post.userPicturePath}`}
-          alt="profile"
-          className="h-8 w-8 rounded-full"
-        />
-        <div>
-          <h4 className="font-bold h-4">{`${post.firstName} ${post.lastName}`}</h4>
-          <p className="font-thin text-sm text-gray-500">{`${post.location}`}</p>
+      <div className="flex justify-between">
+        <div className="flex flex-row gap-2">
+          <img
+            src={`http://localhost:3000/assets/${post.userPicturePath}`}
+            alt="profile"
+            className="h-8 w-8 rounded-full"
+          />
+          <div>
+            <h4 className="font-bold h-4">{`${post.firstName} ${post.lastName}`}</h4>
+            <p className="font-thin text-sm text-gray-500">{`${post.location}`}</p>
+          </div>
         </div>
-        <button onClick={() => handleAddFriend()}>add friend</button>
+        <button
+          onClick={handleAddFriend}
+          className="bg-[#004d87] p-3 rounded-full text-[#7ec0f2]"
+        >
+          {isFriend ? <FiUserMinus /> : <FiUserPlus />}
+        </button>
       </div>
 
       <hr />

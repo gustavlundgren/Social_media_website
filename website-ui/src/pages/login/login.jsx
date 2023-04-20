@@ -14,7 +14,7 @@ function Login() {
   const [err, setErr] = useState(false);
 
   /* Redux state */
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
 
   const inputStyle =
     "bg-[#d8d8d8] text-[#707070] py-4 px-2 rounded-xl focus:outline-none";
