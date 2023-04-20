@@ -2,8 +2,7 @@ const express = require("express");
 const verifyToken = require("../middleware/auth");
 const {
   getUserFriend,
-  addFriend,
-  removeFriend,
+  addRemoveFriend,
   getUserById,
 } = require("../controllers/users");
 const router = express.Router();
@@ -12,13 +11,11 @@ const router = express.Router();
 
 /* Read */
 router.get("/:id/friends", verifyToken, getUserFriend);
-router.get("/:id", verifyToken, getUserById); 
+router.get("/:id", verifyToken, getUserById);
 
 /* Update */
-router.put("/:id/add-friend", verifyToken, addFriend);
-router.put("/:id/remove-friend", verifyToken, removeFriend);
+router.put("/:id/:friendId", verifyToken, addRemoveFriend);
 
 /* Delete */
 
 module.exports = router;
- 

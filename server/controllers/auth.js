@@ -15,7 +15,7 @@ const register = async (req, res) => {
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
-
+ 
   try {
     const newUser = new User({
       firstName,

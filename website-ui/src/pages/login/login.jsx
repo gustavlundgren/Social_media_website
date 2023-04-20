@@ -33,6 +33,8 @@ function Login() {
       dispatch(addToken(response.data?.token));
       dispatch(addUser(response.data?.user));
 
+      //console.log(response.data.token);
+
       setEmail("");
       setPwd("");
       navigate("/");
@@ -64,17 +66,17 @@ function Login() {
   }, [email, pwd]);
 
   return (
-    <main className='font-quicksand flex justify-center items-center h-screen bg-[#dfdfdf]'>
+    <main className="font-quicksand flex justify-center items-center h-screen bg-[#dfdfdf]">
       <form
-        className='flex flex-col w-9/12 gap-6 py-12 px-6 bg-white rounded-md'
+        className="flex flex-col w-9/12 gap-6 py-12 px-6 bg-white rounded-md"
         onSubmit={handleSubmit}
       >
-        <h1 className='font-bold text-4xl'>Login</h1>
+        <h1 className="font-bold text-4xl">Login</h1>
 
         <input
-          type='text'
-          name='email'
-          placeholder='Type your email'
+          type="text"
+          name="email"
+          placeholder="Type your email"
           className={inputStyle}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -82,24 +84,24 @@ function Login() {
           value={email}
         />
         <input
-          type='password'
-          name='password'
-          placeholder='Type your password'
+          type="password"
+          name="password"
+          placeholder="Type your password"
           className={inputStyle}
           onChange={(e) => setPwd(e.target.value)}
           value={pwd}
         />
 
-        {err && <p className='text-red-600 text-lg font-semibold'>{errMsg}</p>}
+        {err && <p className="text-red-600 text-lg font-semibold">{errMsg}</p>}
         <button
-          type='submit'
-          className='font-bold text-lg px-4 py-2 rounded-lg bg-[#5BBEFF] hover:scale-[101%]'
+          type="submit"
+          className="font-bold text-lg px-4 py-2 rounded-lg bg-[#5BBEFF] hover:scale-[101%]"
         >
           Sign in
         </button>
         <div>
-          <p className='font-bold'>Need an account?</p>
-          <a className='text-blue-700' href='/register'>
+          <p className="font-bold">Need an account?</p>
+          <a className="text-blue-700" href="/register">
             Sign up
           </a>
         </div>

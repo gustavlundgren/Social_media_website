@@ -10,7 +10,7 @@ const createPost = async (req, res) => {
 
     const newPost = new Post({
       userId,
-      firstname: user.firstName,
+      firstName: user.firstName,
       lastName: user.lastName,
       location: user.location,
       description,
